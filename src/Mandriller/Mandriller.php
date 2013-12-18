@@ -21,52 +21,36 @@ class Mandriller_Exception extends \FuelException {}
 class Mandriller {
 
     /**
-     * @var string The secret API key
+     * @var  array  Default configuration values
      */
-    protected static $api_key = '';
+    protected $defaults = array(
+        'api_key'             => '',
+        'api_url'             => 'https://mandrillapp.com/api/1.0/',
+        'async'               => false,
+        'preserve_recipients' => false,
+        'user_agent'          => 'Fuel-Mandriller/0.1',
+        'custom_headers'      => array(),
+    );
 
     /**
-     * @var string The API url
+     * Constructor
+     *
+     * @param  array|null  $config  Optional array of configuration items
+     *
+     * @return void
      */
-    protected static $api_url = 'https://mandrillapp.com/api/1.0/';
-
-    /**
-     * @var bool Async
-     */
-    protected static $async = false;
-
-    /**
-     * @var bool Preserve recipients
-     */
-    protected static $preserve_recipients = false;
-
-    /**
-     * @var string User agent
-     */
-    protected static $user_agent = 'Fuel-Mandriller/0.1';
-
-    /**
-     * @var array Custom headers
-     */
-    protected static $custom_headers = array();
-
-    /**
-     * Static constructor called by autoloader
-     */
-    public static function _init()
+    public function __construct()
     {
         $config = \Config::load('mandriller', true);
 
-        if (empty($config['api_key']))
+        // override defaults if needed
+        if (is_array($config))
         {
-            throw new \Mandriller_Exception('API key not specified.');
+            foreach ($config as $key => $value)
+            {
+                array_key_exists($key, $this->defaults) and $this->defaults[$key] = $value;
+            }
         }
-
-        static::$api_key = $config['api_key'];
-        static::$async = $config['async'];
-        static::$preserve_recipients = $config['preserve_recipients'];
-        static::$user_agent = $config['user_agent'];
-        static::$custom_headers = $config['custom_headers'];
     }
 
     /**
@@ -77,20 +61,20 @@ class Mandriller {
      * @throws Exception
      * @return object    The response object
      */
-    public static function request($method, $arguments = array())
+    public function request($method, $arguments = array())
     {
         // build arguments to send
-        $arguments['key'] = static::$api_key;
-        $arguments['async'] = static::$async;
-        $arguments['message']['preserve_recipients'] = static::$preserve_recipients;
-        $arguments['message']['headers'] = static::$custom_headers;
+        $arguments['key'] = $this->defaults['api_key'];
+        $arguments['async'] = $this->defaults['async'];
+        $arguments['message']['preserve_recipients'] = $this->defaults['preserve_recipients'];
+        $arguments['message']['headers'] = $this->defaults['custom_headers'];
 
         // setup curl request
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
-            CURLOPT_USERAGENT      => static::$user_agent,
-            CURLOPT_URL            => static::$api_url . $method . '.json',
+            CURLOPT_USERAGENT      => $this->defaults['user_agent'],
+            CURLOPT_URL            => $this->defaults['api_url'] . $method . '.json',
             CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
@@ -115,7 +99,7 @@ class Mandriller {
             curl_close($ch);
 
             // Throw exception
-            throw new \Mandriller_Exception('Mandrill API call to url failed: ' . $error);
+            throw new Mandriller_Exception('Mandrill API call to url failed: ' . $error);
         }
 
         // Close connection
@@ -127,7 +111,7 @@ class Mandriller {
         // Check for failed calls to mandrill
         if (floor($info['http_code'] / 100) >= 4)
         {
-            throw new \Mandriller_Exception('Mandrill error #' . $result['code'] . ': ' . $result['message']);
+            throw new Mandriller_Exception('Mandrill error #' . $result['code'] . ': ' . $result['message']);
         }
 
         // Check for errors inside the response
@@ -136,12 +120,12 @@ class Mandriller {
             // Is response status is not sent, than error
             if (in_array($result[0]['status'], array('rejected', 'invalid')))
             {
-                throw new \Mandriller_Exception('Mandrill response error: ' . $result[0]['status']);
+                throw new Mandriller_Exception('Mandrill response error: ' . $result[0]['status']);
             }
         }
         else if ( ! empty($result['code']))
         {
-            throw new \Mandriller_Exception('Mandrill response error: ' . $result['message']);
+            throw new Mandriller_Exception('Mandrill response error: ' . $result['message']);
         }
 
         return $result;
@@ -154,9 +138,9 @@ class Mandriller {
      * @throws Exception
      * @return object    The response object
      */
-    public static function sendTemplate($message = array())
+    public function sendTemplate($message = array())
     {
         // Send email
-        return static::request('messages/send-template', $message);
+        return $this->request('messages/send-template', $message);
     }
 }
