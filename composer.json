@@ -1,7 +1,8 @@
 {
     "name": "it-can/fuel-mandriller",
+    "type": "library",
     "description": "Mandrill package for FuelPHP",
-    "keywords": ["mandrill","fuelphp","smtp","email"],
+    "keywords": ["mandrill","fuelphp","email"],
     "license": "MIT",
     "authors": [
         {
