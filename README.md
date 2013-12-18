@@ -36,6 +36,6 @@ return array(
     'user_agent' => 'Fuel-Mandriller/0.1',
 
     // Custom headers (for example: array('List-Unsubscribe' => '<mailto:info@example.com>');)
-    'custom_headers' => array();
+    'custom_headers' => array(),
 );
 ```
