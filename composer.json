@@ -1,15 +1,15 @@
 {
-    "name": "IT-Can/fuel-mandriller",
+    "name": "it-can/fuel-mandriller",
     "type": "package",
     "description": "Mandrill package for FuelPHP",
     "keywords": ["mandrill","fuelphp","smtp","email"],
-    "homepage": "https://github.com/IT-Can/fuel-mandriller",
+    "homepage": "https://github.com/it-can/fuel-mandriller",
     "license": "MIT",
     "authors": [
         {
             "name": "Michiel Vugteveen",
             "email": "info@it-can.nl",
-            "homepage": "https://github.com/IT-Can/fuel-mandriller"
+            "homepage": "https://github.com/it-can/fuel-mandriller"
         }
     ],
     "require": {
