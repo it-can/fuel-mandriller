@@ -8,7 +8,7 @@
  * @author     Michiel Vugteveen
  * @license    MIT License
  * @copyright  2013 Michiel Vugteveen
- * @link       https://github.com/IT-Can/fuel-mandriller
+ * @link       https://github.com/it-can/fuel-mandriller
  */
 
 Autoloader::add_core_namespace('Mandriller');
