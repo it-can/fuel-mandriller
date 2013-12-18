@@ -1,4 +1,4 @@
-mandrill-fuel
+fuel-mandriller
 =============
 
 Mandrill FuelPHP composer package
