@@ -146,4 +146,17 @@ class Mandriller {
 
         return $result;
     }
+
+    /**
+     * Do a request to "messages/send-template"
+     *
+     * @param  array     $message Message info
+     * @throws Exception
+     * @return object    The response object
+     */
+    public static function sendTemplate($message = array())
+    {
+        // Send email
+        return static::request('messages/send-template', $message);
+    }
 }
