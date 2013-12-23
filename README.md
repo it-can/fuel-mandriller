@@ -47,35 +47,16 @@ EXAMPLE (this only works for send-template method)
 
 // Send email
 try {
-
-    $message = array(
-        'template_name' => 'my-template',
-        'template_content' => array(),
-        'message'       => array(
-            'subject'    => 'My subject',
-            'from_email' => 'no-reply@example.com',
-            'to'         => array(
-                array(
-                    'email' => 'to@user.com',
-                )
-            ),
-            'merge_vars' => array(
-                array(
-                    'rcpt' => 'to@user.com',
-                    'vars' =>
-                        array(
-                            array(
-                                'name' => 'LINK',
-                                'content' => 'http://www.google.com/',
-                            ),
-                         ),
-                 ),
-              ),
-        ),
-    );
-
     $mandrill = new \Mandriller\Mandriller();
-    $mandrill->sendTemplate($message);
+    $mandrill->from('no-reply@example.com');
+    $mandrill->to('user@example.com');
+    $mandrill->subject('Mandrill template test');
+    $mandrill->template('mandrill-test-template');
+    $mandrill->mergeVars(array(
+        'name' => 'NAME',
+        'content' => 'John',
+    ));
+    $mandrill->sendTemplate();
 
     // Do other stuff
 } catch (\FuelException $e) {

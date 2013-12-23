@@ -38,6 +38,32 @@ class Mandriller {
     protected $ch;
 
     /**
+     * @var  array  $to
+     */
+    protected $to = array();
+
+    /**
+     * @var  string  $from
+     */
+    protected $from;
+
+    /**
+     * @var  string  $subject
+     */
+    protected $subject;
+
+    /**
+     * @var  string  $templateName
+     */
+    protected $templateName;
+
+    /**
+     * @var  array  $mergeVars
+     */
+    protected $mergeVars = array();
+
+
+    /**
      * Constructor
      *
      * @param  array|null  $config  Optional array of configuration items
@@ -166,15 +192,98 @@ class Mandriller {
     }
 
     /**
+     * Set to field
+     *
+     * @param  mixed     $to The email address to send to
+     * @param  string    $name The optional display name to use for the recipient
+     * @param  string    $type The header type to use for the recipient, defaults to "to" if not provided oneof(to, cc, bcc)
+     *
+     * @return void
+     */
+    public function to($to, $name = '', $type = 'to')
+    {
+        $this->to[] = array('email' => $to, 'name' => $name, 'type' => $type);
+    }
+
+    /**
+     * Set from field
+     *
+     * @param  string     $from The email address that send the email
+     *
+     * @return void
+     */
+    public function from($from)
+    {
+        $this->from = $from;
+    }
+
+    /**
+     * Set subject field
+     *
+     * @param  string     $subject The subject
+     *
+     * @return void
+     */
+    public function subject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * Set template name
+     *
+     * @param  string     $name The Mandrill template name
+     *
+     * @return void
+     */
+    public function template($name)
+    {
+        $this->templateName = $name;
+    }
+
+    /**
+     * Set merge vars for template
+     *
+     * @param  array     $vars The merge vars for the template
+     *
+     * @return void
+     */
+    public function mergeVars($vars)
+    {
+        $this->mergeVars[] = $vars;
+    }
+
+    /**
+     * Create the array to send to Mandrill (send-template)
+     *
+     *
+     * @return array
+     */
+    protected function createTemplateMessage()
+    {
+        $message = array(
+            'template_name' => $this->templateName,
+            'template_content' => array(),
+            'message' => array(
+                'subject'    => $this->subject,
+                'from_email' => $this->from,
+                'to'         => $this->to,
+                'global_merge_vars' => $this->mergeVars,
+            ),
+        );
+
+        return $message;
+    }
+
+    /**
      * Do a request to "messages/send-template"
      *
-     * @param  array     $message Message info
      * @throws Exception
      * @return object    The response object
      */
-    public function sendTemplate($message = array())
+    public function sendTemplate()
     {
         // Send email
-        return $this->request('messages/send-template', $message);
+        return $this->request('messages/send-template', $this->createTemplateMessage());
     }
 }
