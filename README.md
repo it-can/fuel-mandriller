@@ -1,6 +1,9 @@
 fuel-mandriller
 ======
 
+Use at your own risk! Api is subject to change!
+
+======
 Mandrill FuelPHP composer package (www.mandrill.com)
 
 # Installation
