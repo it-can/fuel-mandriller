@@ -33,6 +33,11 @@ class Mandriller {
     );
 
     /**
+     * @var  resource  $ch
+     */
+    protected $ch;
+
+    /**
      * Constructor
      *
      * @param  array|null  $config  Optional array of configuration items
@@ -41,9 +46,17 @@ class Mandriller {
      */
     public function __construct()
     {
+        // check if we have libcurl available
+        if ( ! function_exists('curl_init'))
+        {
+            // Throw exception
+            throw new Mandriller_Exception('Your PHP installation doesn\'t have cURL enabled. Rebuild PHP with --with-curl');
+        }
+
+        // Load config
         $config = \Config::load('mandriller', true);
 
-        // override defaults if needed
+        // Override defaults if needed
         if (is_array($config))
         {
             foreach ($config as $key => $value)
@@ -51,6 +64,37 @@ class Mandriller {
                 array_key_exists($key, $this->defaults) and $this->defaults[$key] = $value;
             }
         }
+
+        // Check if there is a api key
+        if (empty($this->defaults['api_key']))
+        {
+            // Throw exception
+            throw new Mandriller_Exception('You must provide a Mandrill API key!');
+        }
+
+        // Init cURL
+        $this->ch = curl_init();
+        curl_setopt($this->ch, CURLOPT_USERAGENT, $this->defaults['user_agent']);
+        curl_setopt($this->ch, CURLOPT_POST, true);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->ch, CURLOPT_HEADER, false);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($this->ch, CURLOPT_TIMEOUT, 600);
+        curl_setopt($this->ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, false);
+    }
+
+    /**
+     * Destructor
+     *
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        curl_close($this->ch);
     }
 
     /**
@@ -70,24 +114,11 @@ class Mandriller {
         $arguments['message']['headers'] = $this->defaults['custom_headers'];
 
         // setup curl request
-        $ch = curl_init();
+        $ch = $this->ch;
 
-        curl_setopt_array($ch, array(
-            CURLOPT_USERAGENT      => $this->defaults['user_agent'],
-            CURLOPT_URL            => $this->defaults['api_url'] . $method . '.json',
-            CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HEADER         => false,
-            CURLOPT_CONNECTTIMEOUT => 20,
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_POST           => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_PORT           => 443,
-            CURLOPT_HTTPHEADER     => array('Content-Type: application/json'),
-            CURLOPT_POSTFIELDS     => json_encode($arguments),
-        ));
+        curl_setopt($ch, CURLOPT_URL, $this->defaults['api_url'] . $method . '.json');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arguments));
 
         // Execute request
         $response_body = curl_exec($ch);
@@ -96,21 +127,22 @@ class Mandriller {
         // catch errors
         if ($error = curl_error($ch))
         {
-            curl_close($ch);
-
             // Throw exception
             throw new Mandriller_Exception('Mandrill API call to url failed: ' . $error);
         }
 
-        // Close connection
-        curl_close($ch);
-
-        // return array
+        // Check for response
         $result = json_decode($response_body, true);
+        if ($result === null)
+        {
+            // Throw exception
+            throw new Mandriller_Exception('We were unable to decode the JSON response from the Mandrill API: ' . $response_body);
+        }
 
         // Check for failed calls to mandrill
         if (floor($info['http_code'] / 100) >= 4)
         {
+            // Throw exception
             throw new Mandriller_Exception('Mandrill error #' . $result['code'] . ': ' . $result['message']);
         }
 
@@ -120,11 +152,13 @@ class Mandriller {
             // Is response status is not sent, than error
             if (in_array($result[0]['status'], array('rejected', 'invalid')))
             {
+                // Throw exception
                 throw new Mandriller_Exception('Mandrill response error: ' . $result[0]['status']);
             }
         }
         else if ( ! empty($result['code']))
         {
+            // Throw exception
             throw new Mandriller_Exception('Mandrill response error: ' . $result['message']);
         }
 
