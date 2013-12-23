@@ -30,7 +30,7 @@ return array(
     'api_key' => '',
 
     // enable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of "queued" for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.
-    'async'   => false,
+    'async' => false,
 
     // Show receivers of email in cc (if you set this to true, it will show all recipients in the email)
     'preserve_recipients' => false,
@@ -43,7 +43,7 @@ return array(
 );
 ```
 
-EXAMPLE (this only works for send-template method)
+EXAMPLE (this only works for send-template method, send-template is the only supported Mandrill method at this time)
 
 ```php
 <?php
