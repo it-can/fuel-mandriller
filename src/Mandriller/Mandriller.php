@@ -47,9 +47,12 @@ class Mandriller {
     protected $to = array();
 
     /**
-     * @var  string  $from
+     * @var  array  $from
      */
-    protected $from;
+    protected $from = array(
+        'name' => '',
+        'email' => '',
+    );
 
     /**
      * @var  string  $reply_to
@@ -75,6 +78,11 @@ class Mandriller {
      * @var  bool  $important
      */
     protected $important = false;
+
+    /**
+     * @var  array  $allowed_methods
+     */
+    protected $allowed_methods = array('messages/send-template', 'messages/send');
 
     /**
      * Constructor
@@ -145,6 +153,12 @@ class Mandriller {
      */
     public function request($method)
     {
+        if (empty($method) or ! in_array($method, $this->allowed_methods))
+        {
+            // Throw exception
+            throw new Mandriller_Exception('Not allowed to call ' . $method);
+        }
+
         // Create array with info
         $arguments = $this->createMessage();
 
@@ -233,13 +247,17 @@ class Mandriller {
     /**
      * Set from field
      *
-     * @param  string     $from The email address that send the email
+     * @param  string     $email The email address that send the email
+     * @param  string     $name The name that send the email
      *
      * @return void
      */
-    public function from($from)
+    public function from($email, $name = '')
     {
-        $this->from = $from;
+        $this->from = array(
+            'email' => $email,
+            'name' => $name,
+        );
     }
 
     /**
@@ -307,7 +325,8 @@ class Mandriller {
                 'preserve_recipients' => $this->defaults['preserve_recipients'],
                 'headers'             => $this->defaults['custom_headers'],
                 'subject'             => $this->subject,
-                'from_email'          => $this->from,
+                'from_name'           => $this->from['name'],
+                'from_email'          => $this->from['email'],
                 'to'                  => $this->to,
                 'global_merge_vars'   => $this->mergeVars,
                 'important'           => $this->important,

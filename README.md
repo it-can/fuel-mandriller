@@ -54,7 +54,7 @@ EXAMPLE (this only works for send-template method, send-template is the only sup
 // Send email
 try {
     $mandrill = new \Mandriller\Mandriller();
-    $mandrill->from('from@example.com');
+    $mandrill->from('from@example.com', 'From name');
     $mandrill->to('user@example.com');
     $mandrill->reply_to('from@example.com');
     $mandrill->subject('Mandrill template test');
