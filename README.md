@@ -3,6 +3,7 @@ fuel-mandriller
 
 Use at your own risk! Api is subject to change!
 
+[![Build Status](https://travis-ci.org/it-can/fuel-mandriller.png?branch=master)](https://travis-ci.org/it-can/fuel-mandriller)
 [![Total Downloads](https://poser.pugx.org/it-can/fuel-mandriller/downloads.png)](https://packagist.org/packages/it-can/fuel-mandriller)
 
 ======
