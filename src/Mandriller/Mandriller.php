@@ -23,7 +23,7 @@ class Mandriller {
     /**
      * @var  array  Default configuration values
      */
-    protected $defaults = array(
+    public $defaults = array(
         'api_key'             => '',
         'api_url'             => 'https://mandrillapp.com/api/1.0/',
         'async'               => false,
@@ -70,7 +70,7 @@ class Mandriller {
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($config = array())
     {
         // check if we have libcurl available
         if ( ! function_exists('curl_init'))
@@ -80,7 +80,7 @@ class Mandriller {
         }
 
         // Load config
-        $config = \Config::load('mandriller', true);
+        $config = ($config) ?: \Config::load('mandriller', true);
 
         // Override defaults if needed
         if (is_array($config))
@@ -259,7 +259,7 @@ class Mandriller {
      *
      * @return array
      */
-    protected function createTemplateMessage()
+    public function createTemplateMessage()
     {
         $message = array(
             'template_name' => $this->templateName,
