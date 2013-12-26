@@ -3,6 +3,8 @@ fuel-mandriller
 
 Use at your own risk! Api is subject to change!
 
+[![Total Downloads](https://poser.pugx.org/it-can/fuel-mandriller/downloads.png)](https://packagist.org/packages/it-can/fuel-mandriller)
+
 ======
 Mandrill FuelPHP composer package (www.mandrill.com)
 

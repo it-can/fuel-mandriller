@@ -6,8 +6,12 @@ desktop.ini
 .buildpath
 .project
 .settings
-fuel/app/logs/*/*/*
-fuel/app/cache/*/*
-nbproject/
-.idea
 *.tmproj
+build
+nbproject
+index.php
+.idea
+vendor
+composer.phar
+coverage
+composer.lock
