@@ -66,6 +66,10 @@ class Mandriller {
      */
     protected $mergeVars = array();
 
+    /**
+     * @var  bool  $important
+     */
+    protected $important = false;
 
     /**
      * Constructor
@@ -142,6 +146,7 @@ class Mandriller {
         $arguments['async'] = $this->defaults['async'];
         $arguments['message']['preserve_recipients'] = $this->defaults['preserve_recipients'];
         $arguments['message']['headers'] = $this->defaults['custom_headers'];
+        $arguments['message']['important'] = $this->important;
 
         // setup curl request
         $ch = $this->ch;
@@ -206,7 +211,11 @@ class Mandriller {
      */
     public function to($to, $name = '', $type = 'to')
     {
-        $this->to[] = array('email' => $to, 'name' => $name, 'type' => $type);
+        $this->to[] = array(
+            'email' => $to,
+            'name' => $name,
+            'type' => $type
+        );
     }
 
     /**
@@ -255,6 +264,18 @@ class Mandriller {
     public function mergeVars($vars)
     {
         $this->mergeVars[] = $vars;
+    }
+
+    /**
+     * Set important
+     *
+     * @param  bool     $important Is this email important?
+     *
+     * @return void
+     */
+    public function important($important)
+    {
+        $this->important = (bool) $important;
     }
 
     /**

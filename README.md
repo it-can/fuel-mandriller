@@ -62,6 +62,7 @@ try {
         'name' => 'NAME',
         'content' => 'John',
     ));
+    $mandrill->important(true); // default = false
     $mandrill->sendTemplate();
 
     // Do other stuff
