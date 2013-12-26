@@ -52,6 +52,11 @@ class Mandriller {
     protected $from;
 
     /**
+     * @var  string  $reply_to
+     */
+    protected $reply_to;
+
+    /**
      * @var  string  $subject
      */
     protected $subject;
@@ -135,18 +140,13 @@ class Mandriller {
      * Make the actual API call via curl
      *
      * @param  string    $method    API method that has been called
-     * @param  array     $arguments Arguments that have been passed to it
      * @throws Exception
      * @return object    The response object
      */
-    public function request($method, $arguments = array())
+    public function request($method)
     {
-        // build arguments to send
-        $arguments['key'] = $this->defaults['api_key'];
-        $arguments['async'] = $this->defaults['async'];
-        $arguments['message']['preserve_recipients'] = $this->defaults['preserve_recipients'];
-        $arguments['message']['headers'] = $this->defaults['custom_headers'];
-        $arguments['message']['important'] = $this->important;
+        // Create array with info
+        $arguments = $this->createMessage();
 
         // setup curl request
         $ch = $this->ch;
@@ -219,6 +219,18 @@ class Mandriller {
     }
 
     /**
+     * Set reply-to field
+     *
+     * @param  string    $reply_to The email address to reply to
+     *
+     * @return void
+     */
+    public function reply_to($reply_to)
+    {
+        $this->reply_to = $reply_to;
+    }
+
+    /**
      * Set from field
      *
      * @param  string     $from The email address that send the email
@@ -273,29 +285,42 @@ class Mandriller {
      *
      * @return void
      */
-    public function important($important)
+    public function important($important = false)
     {
         $this->important = (bool) $important;
     }
 
     /**
-     * Create the array to send to Mandrill (send-template)
+     * Create the array to send to Mandrill
      *
      *
      * @return array
      */
-    public function createTemplateMessage()
+    public function createMessage()
     {
         $message = array(
+            'key' => $this->defaults['api_key'],
+            'async' => $this->defaults['async'],
             'template_name' => $this->templateName,
             'template_content' => array(),
             'message' => array(
-                'subject'    => $this->subject,
-                'from_email' => $this->from,
-                'to'         => $this->to,
-                'global_merge_vars' => $this->mergeVars,
+                'preserve_recipients' => $this->defaults['preserve_recipients'],
+                'headers'             => $this->defaults['custom_headers'],
+                'subject'             => $this->subject,
+                'from_email'          => $this->from,
+                'to'                  => $this->to,
+                'global_merge_vars'   => $this->mergeVars,
+                'important'           => $this->important,
             ),
         );
+
+        // Set reply_to headers
+        if ( ! empty($this->reply_to))
+        {
+            $message['message']['headers'] = array_merge(
+                array('Reply-To' => $this->reply_to),
+                $message['message']['headers']);
+        }
 
         return $message;
     }
@@ -309,6 +334,6 @@ class Mandriller {
     public function sendTemplate()
     {
         // Send email
-        return $this->request('messages/send-template', $this->createTemplateMessage());
+        return $this->request('messages/send-template');
     }
 }
