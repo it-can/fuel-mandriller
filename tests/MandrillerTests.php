@@ -38,5 +38,11 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
         $mandrill = new \Mandriller\Mandriller($config);
 
         $this->assertEquals($expected, $mandrill->defaults);
+
+        // Test exception
+        unset($config['api_key']);
+
+        $this->setExpectedException('Mandriller\Mandriller_Exception', 'You must provide a Mandrill API key!');
+        $mandrill = new \Mandriller\Mandriller($config);
     }
 }

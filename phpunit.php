@@ -1,6 +1,6 @@
 <?php
 
-class FuelException extends \Exception {}
+class FuelException extends Exception {}
 
 class Config {
     public static function load()
