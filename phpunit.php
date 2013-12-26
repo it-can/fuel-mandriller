@@ -3,7 +3,7 @@
 class FuelException extends \Exception {}
 
 class Config {
-    public function load()
+    public static function load()
     {
         return array(
             'api_key' => '123',
