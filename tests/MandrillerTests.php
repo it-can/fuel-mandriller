@@ -10,7 +10,6 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
-            'api_url' => 'https://mandrillapp.com/api/1.0/',
         );
 
         $mandrill = new \Mandriller\Mandriller();
@@ -32,7 +31,6 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
-            'api_url' => 'https://mandrillapp.com/api/1.0/',
         );
 
         $mandrill = new \Mandriller\Mandriller($config);

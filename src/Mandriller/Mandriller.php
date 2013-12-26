@@ -25,12 +25,16 @@ class Mandriller {
      */
     public $defaults = array(
         'api_key'             => '',
-        'api_url'             => 'https://mandrillapp.com/api/1.0/',
         'async'               => false,
         'preserve_recipients' => false,
         'user_agent'          => 'Fuel-Mandriller/0.1',
         'custom_headers'      => array(),
     );
+
+    /**
+     * @var  string  $api_url
+     */
+    protected $api_url = 'https://mandrillapp.com/api/1.0/';
 
     /**
      * @var  resource  $ch
@@ -142,7 +146,7 @@ class Mandriller {
         // setup curl request
         $ch = $this->ch;
 
-        curl_setopt($ch, CURLOPT_URL, $this->defaults['api_url'] . $method . '.json');
+        curl_setopt($ch, CURLOPT_URL, $this->api_url . $method . '.json');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arguments));
 
