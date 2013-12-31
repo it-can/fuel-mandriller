@@ -211,7 +211,29 @@ class Mandriller {
             throw new Mandriller_Exception('Mandrill response error: ' . $result['message']);
         }
 
+        // Reset
+        $this->reset();
+
         return $result;
+    }
+
+    /**
+     * Reset fields
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->to = array();
+        $this->from = array(
+            'name' => '',
+            'email' => '',
+        );
+        $this->reply_to = '';
+        $this->subject = '';
+        $this->templateName = '';
+        $this->mergeVars = array();
+        $this->important = false;
     }
 
     /**
