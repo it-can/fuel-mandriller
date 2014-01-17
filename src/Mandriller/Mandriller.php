@@ -195,22 +195,6 @@ class Mandriller {
             throw new Mandriller_Exception('Mandrill error #' . $result['code'] . ': ' . $result['message']);
         }
 
-        // Check for errors inside the response
-        if ( ! empty($result[0]))
-        {
-            // Is response status is not sent, than error
-            if (in_array($result[0]['status'], array('rejected', 'invalid')))
-            {
-                // Throw exception
-                throw new Mandriller_Exception('Mandrill response error: ' . $result[0]['status']);
-            }
-        }
-        else if ( ! empty($result['code']))
-        {
-            // Throw exception
-            throw new Mandriller_Exception('Mandrill response error: ' . $result['message']);
-        }
-
         // Reset
         $this->reset();
 
