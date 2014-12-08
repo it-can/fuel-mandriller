@@ -136,7 +136,7 @@ class Mandriller {
         // Set ip address (in case your server has multiple ip adresses)
         if ( ! empty($this->defaults['ip']))
         {
-            curl_setopt($ch, CURLOPT_INTERFACE, $this->defaults['ip']);
+            curl_setopt($this->ch, CURLOPT_INTERFACE, $this->defaults['ip']);
         }
     }
 
