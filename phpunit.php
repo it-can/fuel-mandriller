@@ -11,6 +11,7 @@ class Config {
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
+            'ip' => '',
         );
     }
 }

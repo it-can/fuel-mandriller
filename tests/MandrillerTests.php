@@ -10,6 +10,7 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
+            'ip' => '',
         );
 
         $mandrill = new \Mandriller\Mandriller();
@@ -23,6 +24,7 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
+            'ip' => '',
         );
 
         $expected = array(
@@ -31,6 +33,7 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'preserve_recipients' => false,
             'user_agent' => 'Fuel-Mandriller/0.1',
             'custom_headers' => array(),
+            'ip' => '',
         );
 
         $mandrill = new \Mandriller\Mandriller($config);
