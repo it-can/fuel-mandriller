@@ -43,6 +43,9 @@ return array(
 
     // Custom headers (for example: array('List-Unsubscribe' => '<mailto:info@example.com>');)
     'custom_headers' => array(),
+
+    // Set your server ip address (optional, only if your server has multiple ip addresses)
+    'ip' => '',
 );
 ```
 

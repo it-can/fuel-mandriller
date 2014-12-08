@@ -29,6 +29,7 @@ class Mandriller {
         'preserve_recipients' => false,
         'user_agent'          => 'Fuel-Mandriller/0.1',
         'custom_headers'      => array(),
+        'ip'                  => '',
     );
 
     /**
@@ -50,7 +51,7 @@ class Mandriller {
      * @var  array  $from
      */
     protected $from = array(
-        'name' => '',
+        'name'  => '',
         'email' => '',
     );
 
@@ -131,6 +132,12 @@ class Mandriller {
         curl_setopt($this->ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, false);
+
+        // Set ip address (in case your server has multiple ip adresses)
+        if ( ! empty($this->defaults['ip']))
+        {
+            curl_setopt($ch, CURLOPT_INTERFACE, $this->defaults['ip']);
+        }
     }
 
     /**
