@@ -173,7 +173,7 @@ class Mandriller {
         $ch = $this->ch;
 
         curl_setopt($ch, CURLOPT_URL, $this->api_url . $method . '.json');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Expect:'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arguments));
 
         // Execute request
