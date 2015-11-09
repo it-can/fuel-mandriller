@@ -66,6 +66,16 @@ class Mandriller {
     protected $subject;
 
     /**
+     * @var  string  $html
+     */
+    protected $html = '';
+
+    /**
+     * @var  string  $text
+     */
+    protected $text = '';
+
+    /**
      * @var  string  $templateName
      */
     protected $templateName;
@@ -286,6 +296,30 @@ class Mandriller {
     }
 
     /**
+     * Set html field
+     *
+     * @param  string     $html The html
+     *
+     * @return void
+     */
+    public function html($html)
+    {
+        $this->html = $html;
+    }
+
+    /**
+     * Set text field
+     *
+     * @param  string     $text The text
+     *
+     * @return void
+     */
+    public function text($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
      * Set template name
      *
      * @param  string     $name The Mandrill template name
@@ -335,6 +369,8 @@ class Mandriller {
             'template_name' => $this->templateName,
             'template_content' => array(),
             'message' => array(
+                'html'                => $this->html,
+                'text'                => $this->text,
                 'preserve_recipients' => $this->defaults['preserve_recipients'],
                 'headers'             => $this->defaults['custom_headers'],
                 'subject'             => $this->subject,
@@ -367,5 +403,17 @@ class Mandriller {
     {
         // Send email
         return $this->request('messages/send-template');
+    }
+
+    /**
+     * Do a request to "messages/send"
+     *
+     * @throws Exception
+     * @return object    The response object
+     */
+    public function send()
+    {
+        // Send email
+        return $this->request('messages/send');
     }
 }

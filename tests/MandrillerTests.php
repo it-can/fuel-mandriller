@@ -55,6 +55,8 @@ class MandrillerTests extends PHPUnit_Framework_TestCase
             'template_name' => 'test-template',
             'template_content' => array(),
             'message' => array(
+                'html' => '',
+                'text' => '',
                 'preserve_recipients' => false,
                 'headers' => array('Reply-To' => 'test_to4@example.com'),
                 'subject'    => 'Subject test',
